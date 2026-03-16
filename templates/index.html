@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="beta-badge">Beta v0.1</div>
+
+    <div class="container">
+
+        <header>
+            <h1>My To-Do List</h1>
+            <p class="subtitle">Work In Progress - one task at a time!</p>
+        </header>
+
+        <form class="add-form" action="/add" method="POST">
+            <input type="text" name="task_input" class="input-box" placeholder="What needs to be done?">
+            <button type="submit" class="add-btn">+ Add</button>
+        </form>
+
+        <section class="tasks">
+            {% if current_tasks %}
+            <p class="task-count">{{ current_tasks|length }} task(s)</p>
+            <ul class="list">
+                {% for task in current_tasks %}
+                <li class="item {{ 'done' if task.done else '' }}" onclick="toggleDone({{ loop.index0 }})">
+                    <form id="chk-{{ loop.index0 }}" action="/complete/{{ loop.index0 }}" method="POST"
+                        class="chk-form">
+                        <button type="submit" class="check-btn">
+                            {{ '✅' if task.done else '' }}
+                        </button>
+                    </form>
+                    <span class="txt">{{ task.text }}</span>
+
+                    <form action="/delete/{{ loop.index0 }}" method="POST" class="del-form">
+                        <button type="submit" class="del-btn" onclick="event.stopPropagation()">X</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="empty">
+                <p>No tasks yet - add something above!</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <footer>
+            <p>More features coming soon. Stay tuned!</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function toggleDone(idx) {
+            document.getElementById('chk-' + idx).submit();
+        }
+    </script>
+
+</body>
+
+</html>
