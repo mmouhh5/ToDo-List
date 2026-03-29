@@ -1,13 +1,26 @@
+import json
+import os
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-task_list = []
+TASKS_FILE = 'tasks.json'
+
+
+def load_tasks():
+    if not os.path.exists(TASKS_FILE):
+        return []
+    with open(TASKS_FILE, 'r') as f:
+        return json.load(f)
+
+def save_tasks(tasks):
+    with open(TASKS_FILE, 'w') as f:
+        json.dump(tasks, f)
 
 
 @app.route("/")
 def index():
-    current_tasks = task_list
+    current_tasks = load_tasks()
     return render_template("index.html", current_tasks=current_tasks)
 
 
@@ -16,27 +29,31 @@ def add_task():
     t = request.form.get("task_input", "").strip()
 
     if t:
-        task_list.append({"text": t, "done": False})
+        tasks = load_tasks()
+        tasks.append({"text": t, "done": False})
+        save_tasks(tasks)
 
     return redirect(url_for("index"))
 
 
 @app.route("/complete/<int:idx>", methods=["POST"])
 def complete_task(idx):
-    if 0 <= idx < len(task_list):
-        task_list[idx]["done"] = not task_list[idx]["done"]
+    tasks = load_tasks()
+    if 0 <= idx < len(tasks):
+        tasks[idx]["done"] = not tasks[idx]["done"]
+        save_tasks(tasks)
     return redirect(url_for("index"))
 
 
 @app.route("/delete/<int:idx>", methods=["POST"])
 def delete_task(idx):
-    if 0 <= idx < len(task_list):
-        task_list.pop(idx)
+    tasks = load_tasks()
+    if 0 <= idx < len(tasks):
+        tasks.pop(idx)
+        save_tasks(tasks)
     return redirect(url_for("index"))
 
+
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 5001))
     app.run(host='0.0.0.0', port=port)
-
-# TODO: Add a database to store tasks (tasks reset when server restarts)
