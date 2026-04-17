@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
@@ -20,8 +21,19 @@ def save_tasks(tasks):
 
 @app.route("/")
 def index():
+    sort_by = request.args.get("sort")
+    filter_by = request.args.get("filter")
     current_tasks = load_tasks()
-    return render_template("index.html", current_tasks=current_tasks)
+    
+    # temporary fix to keep indexes matched - just sort and save it!
+    if sort_by == "new":
+        current_tasks.sort(key=lambda x: x.get("date", ""), reverse=True)
+        save_tasks(current_tasks)
+    elif sort_by == "old":
+        current_tasks.sort(key=lambda x: x.get("date", ""))
+        save_tasks(current_tasks)
+
+    return render_template("index.html", current_tasks=current_tasks, filter_by=filter_by)
 
 
 @app.route("/add", methods=["POST"])
@@ -30,7 +42,8 @@ def add_task():
 
     if t:
         tasks = load_tasks()
-        tasks.append({"text": t, "done": False})
+        d = str(time.time())
+        tasks.append({"text": t, "done": False, "date": d})
         save_tasks(tasks)
 
     return redirect(url_for("index"))

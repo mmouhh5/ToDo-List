@@ -17,22 +17,6 @@ body {
     padding: 2rem 1rem;
     position: relative;
 }
-
-.beta-badge {
-    position: fixed;
-    top: 14px;
-    right: -28px;
-    background: linear-gradient(135deg, #f59e0b, #ef4444);
-    color: white;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    padding: 5px 40px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    z-index: 999;
-    transform: rotate(45deg) translateX(16px);
-}
-
 .container {
     background: #ffffff;
     border-radius: 20px;
@@ -41,6 +25,7 @@ body {
     width: 100%;
     max-width: 540px;
     border: 1.5px solid #e0e7ff;
+    position: relative;
 }
 
 header {
@@ -236,4 +221,190 @@ footer {
     border-top: 1px dashed #e0e7ff;
     color: #c7d2fe;
     font-size: 0.8rem;
+}
+
+/* --- Dark Mode and Animations --- */
+body, body * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-mode {
+    background: #111827;
+    color: #e5e7eb;
+}
+
+body.dark-mode .container {
+    background: #1f2937;
+    border-color: #374151;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode header h1 {
+    color: #f3f4f6;
+}
+
+body.dark-mode .subtitle,
+body.dark-mode .empty,
+body.dark-mode footer,
+body.dark-mode .task-count {
+    color: #9ca3af;
+}
+
+body.dark-mode .input-box {
+    background: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+body.dark-mode .input-box:focus {
+    background: #1f2937;
+    border-color: #6366f1;
+}
+
+body.dark-mode .item {
+    background: #374151;
+    border-color: #4b5563;
+}
+
+body.dark-mode .txt {
+    color: #e5e7eb;
+}
+
+body.dark-mode .item.done {
+    background: #064e3b;
+    border-color: #059669;
+}
+
+body.dark-mode .item.done .txt {
+    color: #34d399;
+}
+
+body.dark-mode .del-btn {
+    border-color: #ef4444;
+    color: #fca5a5;
+}
+
+body.dark-mode .del-btn:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+/* Override inline styles for dropdown */
+body.dark-mode #dropdown-menu {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+}
+
+body.dark-mode #dropdown-menu a {
+    color: #e5e7eb !important;
+    border-color: #374151 !important;
+    background: transparent !important;
+}
+
+body.dark-mode #dropdown-menu a:hover {
+    background: #374151 !important;
+}
+
+body.dark-mode #dropdown-menu > div,
+body.dark-mode #dropdown-menu > div > div {
+    border-color: #374151 !important;
+}
+
+/* --- Theme Toggle Switch --- */
+.theme-toggle {
+    width: 140px;
+    height: 40px;
+    background: #f3f4f6;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #e5e7eb;
+    transition: background 0.4s ease, border-color 0.4s ease;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+body.dark-mode .theme-toggle {
+    background: #1f2937;
+    border-color: #111827;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.toggle-circle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: calc(100% - 36px); 
+    width: 32px;
+    height: 32px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 2;
+}
+
+body.dark-mode .toggle-circle {
+    left: 4px;
+}
+
+.sun-icon {
+    display: block;
+    animation: rotate-in 0.4s ease;
+}
+
+.moon-icon {
+    display: none;
+    animation: rotate-in 0.4s ease;
+}
+
+body.dark-mode .sun-icon {
+    display: none;
+}
+
+body.dark-mode .moon-icon {
+    display: block;
+}
+
+@keyframes rotate-in {
+    from { transform: rotate(-90deg); opacity: 0; }
+    to { transform: rotate(0); opacity: 1; }
+}
+
+.toggle-text-left {
+    position: absolute;
+    left: 16px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: sans-serif;
+    color: #111827;
+    letter-spacing: 0.05em;
+    user-select: none;
+    transition: opacity 0.3s ease;
+}
+
+.toggle-text-right {
+    position: absolute;
+    right: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    user-select: none;
+    transition: opacity 0.3s ease;
+}
+
+body.dark-mode .toggle-text-left {
+    opacity: 0;
+}
+
+body.dark-mode .toggle-text-right {
+    opacity: 1;
 }
